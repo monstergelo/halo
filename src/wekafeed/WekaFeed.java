@@ -109,9 +109,9 @@ public class WekaFeed extends AbstractClassifier{
     {
       if(neuralNode[0].length == initiator.length)
       {
-        for(int i=0;i<neuralNode[0].length; i++)
+        for(int j=0;j<neuralNode[0].length; j++)
         {
-          neuralNode[0][i].value = initiator[i];
+          neuralNode[0][j].value = initiator[j];
         }
       }
       else
@@ -151,7 +151,7 @@ public class WekaFeed extends AbstractClassifier{
     int j = index[1];
     int k = 0;
     
-    if(initiator.length != neuralNode[i].length)
+    if(initiator.length != neuralNode[i+1].length)
     {
       System.out.println("kurang panjang");
       return false;
