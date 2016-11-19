@@ -4,7 +4,8 @@ package wekafeed;
 import java.util.Random;
 import weka.classifiers.AbstractClassifier;
 import weka.core.Instances;
-
+        
+        
 public class WekaFeed extends AbstractClassifier{
   public Node[][] neuralNode;
   public static long seed = System.currentTimeMillis();
@@ -245,7 +246,15 @@ public class WekaFeed extends AbstractClassifier{
     int outputCount = 4;
     
     
-    WekaFeed weka = new WekaFeed(inputCount, 1, hiddenCount, outputCount);
+    loaddata load = new loaddata("D:/AI/halo/src/wekafeed/breast-cancer.arff");
+    System.out.println("Banyak atribut adalah " + loaddata.banyakatribut);
+    System.out.println("Banyak kelas adalah " + loaddata.banyakkelas);
+   
+    inputCount=loaddata.banyakatribut;
+    outputCount=loaddata.banyakkelas;
+    
+    
+    WekaFeed weka = new WekaFeed(inputCount, 4, hiddenCount, outputCount);
     weka.assignInput(new double[]{1,2,3,4});
     weka.assignPostEdgeWeight(0, new double[]{4,5,6,7});
     weka.assignPreEdgeWeight(5, new double[]{10,11,12,13});
