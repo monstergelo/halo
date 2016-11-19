@@ -210,6 +210,29 @@ public class WekaFeed extends AbstractClassifier{
     
     return false;
   }
+//============================================================================== 
+  public double sigmaNode(int id){
+    int[] index = searchNode(id);
+    int i = index[0];
+    int j = index[1];
+    double sum = 0;
+    double weight = 0;
+    
+    int ii = i-1;
+    for(int jj=0; jj< neuralNode[ii].length; jj++)
+    {
+      weight = 0;
+      for(int key: neuralNode[ii][jj].edges.keySet()){
+        if(key == id){
+          weight = neuralNode[ii][jj].edges.get(key);
+        }
+      }
+      
+      sum += neuralNode[ii][jj].value * weight;
+    }
+    
+    return sum;
+  }
 //==============================================================================
   @Override
   public void buildClassifier(Instances i) throws Exception {
@@ -222,11 +245,11 @@ public class WekaFeed extends AbstractClassifier{
     int outputCount = 4;
     
     
-    WekaFeed weka = new WekaFeed(inputCount, 4, hiddenCount, outputCount);
+    WekaFeed weka = new WekaFeed(inputCount, 1, hiddenCount, outputCount);
     weka.assignInput(new double[]{1,2,3,4});
     weka.assignPostEdgeWeight(0, new double[]{4,5,6,7});
     weka.assignPreEdgeWeight(5, new double[]{10,11,12,13});
-    weka.assignEdge(10, 15, 99);
+    weka.assignEdge(4, 11, 99);
     
     weka.printAllNode();
     System.out.println("");
