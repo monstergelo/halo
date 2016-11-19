@@ -11,6 +11,8 @@ public class loaddata {
    
     public static String fileName;
     public static Instances train_data;
+    public static int banyakatribut;
+    public static int banyakkelas;
     
     public loaddata(String _filename){  
         fileName=_filename;
@@ -25,7 +27,8 @@ public class loaddata {
 				train_data = arff.getData();
                                 
                                 train_data.setClassIndex(train_data.numAttributes()-1);
-                                
+                                banyakatribut=train_data.numAttributes()-1;
+                                banyakkelas=train_data.numClasses();
 				reader.close();
 		
 		} catch (IOException e) {
@@ -35,12 +38,5 @@ public class loaddata {
 				System.out.println("--------------------------------------------------------------------" + "\n");
 		}
     }
-    
-    public static void main(String[] args) {
-    
-    loaddata load = new loaddata("D:/AI/halo/src/wekafeed/breast-cancer.arff");
-    System.out.println("Banyak atribut" + (train_data.numAttributes()-1));
-    System.out.println("Banyak kelas" + train_data.numClasses());
-  }
     
 }
