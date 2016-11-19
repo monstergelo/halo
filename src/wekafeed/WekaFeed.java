@@ -4,9 +4,10 @@ package wekafeed;
 import java.util.Random;
 import weka.classifiers.AbstractClassifier;
 import weka.core.Instances;
-        
-        
+
 public class WekaFeed extends AbstractClassifier{
+  
+  /* Node attributes */
   public Node[][] neuralNode;
   public static long seed = System.currentTimeMillis();
   public static Random rand = new Random(seed);
@@ -109,9 +110,9 @@ public class WekaFeed extends AbstractClassifier{
     {
       if(neuralNode[0].length == initiator.length)
       {
-        for(int j=0;j<neuralNode[0].length; j++)
+        for(int i=0;i<neuralNode[0].length; i++)
         {
-          neuralNode[0][j].value = initiator[j];
+          neuralNode[0][i].value = initiator[i];
         }
       }
       else
@@ -151,7 +152,7 @@ public class WekaFeed extends AbstractClassifier{
     int j = index[1];
     int k = 0;
     
-    if(initiator.length != neuralNode[i+1].length)
+    if(initiator.length != neuralNode[i].length)
     {
       System.out.println("kurang panjang");
       return false;
@@ -211,29 +212,6 @@ public class WekaFeed extends AbstractClassifier{
     
     return false;
   }
-//============================================================================== 
-  public double sigmaNode(int id){
-    int[] index = searchNode(id);
-    int i = index[0];
-    int j = index[1];
-    double sum = 0;
-    double weight = 0;
-    
-    int ii = i-1;
-    for(int jj=0; jj< neuralNode[ii].length; jj++)
-    {
-      weight = 0;
-      for(int key: neuralNode[ii][jj].edges.keySet()){
-        if(key == id){
-          weight = neuralNode[ii][jj].edges.get(key);
-        }
-      }
-      
-      sum += neuralNode[ii][jj].value * weight;
-    }
-    
-    return sum;
-  }
 //==============================================================================
   @Override
   public void buildClassifier(Instances i) throws Exception {
@@ -241,12 +219,12 @@ public class WekaFeed extends AbstractClassifier{
   }
 //==============================================================================
   public static void main(String[] args) {
+    
     int inputCount = 4;
     int hiddenCount = 4;
     int outputCount = 4;
     
-    
-    loaddata load = new loaddata("D:/AI/halo/src/wekafeed/breast-cancer.arff");
+    loaddata load = new loaddata("C:\\Users\\AlbertusK95\\Documents\\NetBeansProjects\\Tubes2AI\\data\\Team.arff");
     System.out.println("Banyak atribut adalah " + loaddata.banyakatribut);
     System.out.println("Banyak kelas adalah " + loaddata.banyakkelas);
    
@@ -258,12 +236,34 @@ public class WekaFeed extends AbstractClassifier{
     weka.assignInput(new double[]{1,2,3,4});
     weka.assignPostEdgeWeight(0, new double[]{4,5,6,7});
     weka.assignPreEdgeWeight(5, new double[]{10,11,12,13});
-    weka.assignEdge(4, 11, 99);
+    weka.assignEdge(10, 15, 99);
     
     weka.printAllNode();
     System.out.println("");
     System.out.println("");
     weka.printAllEdge();
+    
+    
+    // convert nominal to numeric for class
+    
+
+    
+    // dataset preprocessing
+    try {
+    
+        Normalization nm = new Normalization(load.train_data);
+        Instances normalizedDataset = nm.normalize();
+    
+        System.out.println();
+        System.out.println("Normalized data train");
+        System.out.println(normalizedDataset);
+        
+    } catch (Exception e) {
+        
+        e.printStackTrace();
+       
+    }
+    
   }
 
   
