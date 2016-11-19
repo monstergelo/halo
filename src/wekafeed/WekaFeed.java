@@ -10,6 +10,7 @@ public class WekaFeed extends AbstractClassifier{
   public static long seed = System.currentTimeMillis();
   public static Random rand = new Random(seed);
   
+  
 //==============================================================================
   WekaFeed(int inputCount, int hiddenLayerCount, int hiddenCount, 
           int outputCount){
