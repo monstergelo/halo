@@ -235,10 +235,11 @@ public class WekaFeed extends AbstractClassifier{
       for(int key: neuralNode[ii][jj].edges.keySet()){
         if(key == id){
           weight = neuralNode[ii][jj].edges.get(key);
+          sum += neuralNode[ii][jj].value * weight;
         }
       }
       
-      sum += neuralNode[ii][jj].value * weight;
+      
     }
     
     return sum;
@@ -276,7 +277,7 @@ public class WekaFeed extends AbstractClassifier{
   public static void main(String[] args) {
 
     
-    loaddata load = new loaddata("C:\\Users\\AlbertusK95\\Documents\\NetBeansProjects\\Tubes2AI\\data\\Team.arff");
+    loaddata load = new loaddata("C:\\Program Files\\Weka-3-8\\data\\iris.arff");
     System.out.println("Banyak atribut adalah " + loaddata.banyakatribut);
     System.out.println("Banyak kelas adalah " + loaddata.banyakkelas);
    
@@ -293,12 +294,8 @@ public class WekaFeed extends AbstractClassifier{
     weka.assignPostEdgeWeight(0, new double[]{4,5,6,7});
     weka.assignPreEdgeWeight(5, new double[]{10,11,12,13});
     weka.assignEdge(10, 15, 99);
-    
+    System.out.println("Sebelum Dilakukan Feed Forward =>" );
     weka.printAllNode();
-    System.out.println("");
-    System.out.println("");
-    weka.printAllEdge();
-
     weka.feedforward(2);
     System.out.println("Setelah Dilakukan Feed Forward =>" );
     weka.printAllNode();
@@ -315,8 +312,8 @@ public class WekaFeed extends AbstractClassifier{
         Instances normalizedDataset = nm.normalize();
     
         System.out.println();
-        System.out.println("Normalized data train");
-        System.out.println(normalizedDataset);
+       // System.out.println("Normalized data train");
+       // System.out.println(normalizedDataset);
         
     } catch (Exception e) {
         
