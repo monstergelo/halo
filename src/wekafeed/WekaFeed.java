@@ -4,7 +4,7 @@ package wekafeed;
 import java.util.Random;
 import weka.classifiers.AbstractClassifier;
 import weka.core.Instances;
-
+import java.lang.*;
 public class WekaFeed extends AbstractClassifier{
   
   /* Node attributes */
@@ -58,6 +58,7 @@ public class WekaFeed extends AbstractClassifier{
         for(int k=0; k<nextLayerNodes; k++)
         {
           neuralNode[i][j].edges.put(neuralNode[i+1][k].id, rand.nextDouble());
+          //neuralNode[i][j].edges.put(neuralNode[i+1][k].id, (double) getidnode(neuralNode[i+1][k])); //untuk bahan tes
         }
       }
     }
@@ -85,7 +86,7 @@ public class WekaFeed extends AbstractClassifier{
     int layerNodes;
     for(int i=0; i<layerCount; i++)
     {
-      System.out.println("Layer"+i+"========================"+getLayerSigma(i));
+      System.out.println("Layer"+i+"========================");// + getLayerSigma(i));
       layerNodes = neuralNode[i].length;
       for(int j=0; j<layerNodes; j++)
       {
@@ -145,6 +146,14 @@ public class WekaFeed extends AbstractClassifier{
     }
     return result;
   }
+//==============================================================================
+  
+  // mengembalikan id yang dimiliki oleh suatu neuralNode
+  public int getidnode(Node x)
+  {   
+      return x.id;
+  }
+  
 //==============================================================================  
   public boolean assignPostEdgeWeight(int id, double[] initiator){
     int[] index = searchNode(id);
@@ -213,24 +222,71 @@ public class WekaFeed extends AbstractClassifier{
     return false;
   }
 //==============================================================================
+  public double sigmaNode(int id){
+    int[] index = searchNode(id);
+    int i = index[0];
+    int j = index[1];
+    double sum = 0;
+    double weight = 0;
+    
+    int ii = i-1;
+    for(int jj=0; jj< neuralNode[ii].length; jj++){
+      weight = 0;
+      for(int key: neuralNode[ii][jj].edges.keySet()){
+        if(key == id){
+          weight = neuralNode[ii][jj].edges.get(key);
+        }
+      }
+      
+      sum += neuralNode[ii][jj].value * weight;
+    }
+    
+    return sum;
+  }
+//==============================================================================
+  // Set value baru untuk neuralNode yang mempunyai suatu id tertentu
+    public void setvaluebaru(int id){
+		double negatifnet = -1*sigmaNode(id);
+		double hasilexp;
+		int[] indeks = searchNode(id);
+		
+		
+		hasilexp=1/(1+Math.exp(negatifnet));
+        neuralNode[indeks[0]][indeks[1]].value=hasilexp;        
+        //System.out.println(indeks[0]+" "+indeks[1]);
+    }
+
+//==============================================================================
   @Override
   public void buildClassifier(Instances i) throws Exception {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 //==============================================================================
+
+  // Melakukan feed forward yang dimulai dari "idmulaiassign" =>  node input tidak dapat dicari value barunya
+  public void feedforward(int idmulaiassign){
+	int banyaknode = Node.lastID;
+        
+        for(int i=idmulaiassign; i< banyaknode ; i++)
+        {
+            setvaluebaru(i);
+        }
+  }
+//==============================================================================
   public static void main(String[] args) {
-    
-    int inputCount = 4;
-    int hiddenCount = 4;
-    int outputCount = 4;
+
     
     loaddata load = new loaddata("C:\\Users\\AlbertusK95\\Documents\\NetBeansProjects\\Tubes2AI\\data\\Team.arff");
     System.out.println("Banyak atribut adalah " + loaddata.banyakatribut);
     System.out.println("Banyak kelas adalah " + loaddata.banyakkelas);
    
-    inputCount=loaddata.banyakatribut;
-    outputCount=loaddata.banyakkelas;
-    
+    //inputCount=loaddata.banyakatribut;
+    //outputCount=loaddata.banyakkelas;
+	
+	
+    int inputCount=2;
+    int hiddenCount=2;
+    int outputCount=2;
     
     WekaFeed weka = new WekaFeed(inputCount, 4, hiddenCount, outputCount);
     weka.assignInput(new double[]{1,2,3,4});
@@ -242,7 +298,11 @@ public class WekaFeed extends AbstractClassifier{
     System.out.println("");
     System.out.println("");
     weka.printAllEdge();
-    
+
+    weka.feedforward(2);
+    System.out.println("Setelah Dilakukan Feed Forward =>" );
+    weka.printAllNode();
+
     
     // convert nominal to numeric for class
     
@@ -266,6 +326,4 @@ public class WekaFeed extends AbstractClassifier{
     
   }
 
-  
-  
 }
